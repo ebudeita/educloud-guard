@@ -45,12 +45,14 @@ resource "aws_iam_policy" "scanner_lambda" {
       },
 
       {
-        Sid    = "WriteGovernanceFindings"
+        Sid    = "ManageGovernanceFindings"
         Effect = "Allow"
 
         Action = [
           "dynamodb:GetItem",
-          "dynamodb:PutItem"
+          "dynamodb:PutItem",
+          "dynamodb:Scan",
+          "dynamodb:UpdateItem"
         ]
 
         Resource = aws_dynamodb_table.findings.arn

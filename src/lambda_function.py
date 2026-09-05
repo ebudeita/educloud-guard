@@ -35,7 +35,14 @@ def store_or_update_finding(finding):
     existing_item = response.get("Item")
 
     if existing_item:
-        is_new = False
+        previous_status = existing_item.get(
+            "status",
+            "OPEN",
+        )
+
+        # A previously resolved issue that has returned
+        # should be treated as newly actionable.
+        is_new = previous_status == "RESOLVED"
 
         scan_count = int(
             existing_item.get("scan_count", 1)
@@ -65,6 +72,55 @@ def store_or_update_finding(finding):
         **item,
         "is_new": is_new,
     }
+
+def resolve_missing_findings(current_finding_ids):
+    now = datetime.now(timezone.utc).isoformat()
+    resolved_findings = []
+
+    response = table.scan()
+
+    stored_findings = response.get("Items", [])
+
+    for item in stored_findings:
+        finding_id = item["finding_id"]
+        status = item.get("status", "OPEN")
+
+        if (
+            status == "OPEN"
+            and finding_id not in current_finding_ids
+        ):
+            table.update_item(
+                Key={
+                    "finding_id": finding_id
+                },
+                UpdateExpression=(
+                    "SET #status = :resolved, "
+                    "resolved_at = :resolved_at"
+                ),
+                ExpressionAttributeNames={
+                    "#status": "status"
+                },
+                ExpressionAttributeValues={
+                    ":resolved": "RESOLVED",
+                    ":resolved_at": now,
+                },
+            )
+
+            resolved_findings.append(
+                finding_id
+            )
+
+            print(
+                f"Finding resolved: {finding_id}"
+            )
+
+    print(
+        f"{len(resolved_findings)} "
+        "finding(s) automatically resolved."
+    )
+
+    return resolved_findings
+
 
 def send_high_severity_alert(findings):
     high_findings = [
@@ -153,6 +209,15 @@ def lambda_handler(event, context):
             f"scan_count={stored['scan_count']}"
         )
 
+    current_finding_ids = {
+        finding["finding_id"]
+        for finding in stored_findings
+    }
+
+    resolved_findings = resolve_missing_findings(
+        current_finding_ids
+    )
+
     send_high_severity_alert(stored_findings)
 
     print(
@@ -167,6 +232,7 @@ def lambda_handler(event, context):
                 "findings_detected": len(
                     stored_findings
                 ),
+                "findings_resolved": len(resolved_findings),
                 "findings": stored_findings,
             },
             default=str,
