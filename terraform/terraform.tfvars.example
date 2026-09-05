@@ -1,0 +1,6 @@
+aws_region        = "us-east-1"
+project_name      = "educloud-guard"
+organization_name = "NorthStar-University"
+environment       = "Development"
+
+alert_email = "YOUR_EMAIL_ADDRESS"

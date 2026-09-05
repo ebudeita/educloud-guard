@@ -1,0 +1,39 @@
+# Terraform working directory
+.terraform/
+**/.terraform/
+
+# Terraform state files
+*.tfstate
+*.tfstate.*
+.terraform.tfstate.lock.info
+
+# Terraform variable files that may contain secrets
+terraform.tfvars
+*.tfvars
+
+# Terraform plan files
+*.tfplan
+tfplan
+
+# Generated Lambda deployment packages
+*.zip
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+# Lambda/manual invocation responses
+response.json
+
+# Environment/secrets files
+.env
+.env.*
+
+# Editor/OS files
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
