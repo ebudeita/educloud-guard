@@ -3,6 +3,7 @@ import requests
 from botocore.auth import SigV4Auth
 from botocore.awsrequest import AWSRequest
 
+
 REGION = "us-east-1"
 
 session = boto3.Session()
@@ -29,5 +30,15 @@ response = requests.get(
     timeout=30,
 )
 
-print(f"HTTP Status: {response.status_code}")
-print(response.text)
+print(
+    f"HTTP Status: {response.status_code}"
+)
+
+try:
+    print(
+        response.json()
+    )
+except ValueError:
+    print(
+        response.text
+    )
