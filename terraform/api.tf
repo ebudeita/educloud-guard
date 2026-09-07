@@ -123,8 +123,9 @@ resource "aws_apigatewayv2_integration" "findings" {
 resource "aws_apigatewayv2_route" "findings" {
   api_id = aws_apigatewayv2_api.findings.id
 
-  route_key = "GET /findings"
-  target    = "integrations/${aws_apigatewayv2_integration.findings.id}"
+  route_key          = "GET /findings"
+  target             = "integrations/${aws_apigatewayv2_integration.findings.id}"
+  authorization_type = "AWS_IAM"
 }
 
 
@@ -147,4 +148,9 @@ resource "aws_lambda_permission" "allow_api_gateway" {
 output "findings_api_url" {
   description = "EduCloud Guard findings API endpoint"
   value       = "${aws_apigatewayv2_api.findings.api_endpoint}/findings"
+}
+
+output "findings_api_execution_arn" {
+  description = "Execution ARN for the EduCloud Guard findings API"
+  value       = aws_apigatewayv2_api.findings.execution_arn
 }
