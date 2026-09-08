@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>EduCloud Guard Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="styles.css"
+    >
+</head>
+
+<body>
+
+    <header class="topbar">
+        <div>
+            <h1>EduCloud Guard</h1>
+            <p>NorthStar University Cloud Governance & Security</p>
+        </div>
+
+        <div class="last-updated">
+            <span>Last Updated</span>
+            <strong id="lastUpdated">--</strong>
+        </div>
+    </header>
+
+
+    <main class="dashboard-container">
+
+        <!-- ============================= -->
+        <!-- Summary Cards -->
+        <!-- ============================= -->
+
+        <section class="summary-grid">
+
+            <article class="summary-card">
+                <span class="card-label">Open Findings</span>
+                <strong
+                    class="card-value"
+                    id="openCount"
+                >
+                    0
+                </strong>
+            </article>
+
+
+            <article class="summary-card high-card">
+                <span class="card-label">High Severity</span>
+                <strong
+                    class="card-value"
+                    id="highCount"
+                >
+                    0
+                </strong>
+            </article>
+
+
+            <article class="summary-card medium-card">
+                <span class="card-label">Medium Severity</span>
+                <strong
+                    class="card-value"
+                    id="mediumCount"
+                >
+                    0
+                </strong>
+            </article>
+
+
+            <article class="summary-card low-card">
+                <span class="card-label">Low Severity</span>
+                <strong
+                    class="card-value"
+                    id="lowCount"
+                >
+                    0
+                </strong>
+            </article>
+
+        </section>
+
+
+        <!-- ============================= -->
+        <!-- Category Summary -->
+        <!-- ============================= -->
+
+        <section class="panel">
+
+            <div class="panel-header">
+                <div>
+                    <h2>Cloud Posture Overview</h2>
+                    <p>
+                        Active findings by governance category
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="category-grid">
+
+                <article class="category-card">
+                    <span>Security</span>
+                    <strong id="securityCount">0</strong>
+                </article>
+
+                <article class="category-card">
+                    <span>Governance</span>
+                    <strong id="governanceCount">0</strong>
+                </article>
+
+                <article class="category-card">
+                    <span>Cost</span>
+                    <strong id="costCount">0</strong>
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- ============================= -->
+        <!-- Filters -->
+        <!-- ============================= -->
+
+        <section class="panel">
+
+            <div class="panel-header">
+                <div>
+                    <h2>Findings</h2>
+                    <p>
+                        Review active cloud governance,
+                        security and cost findings
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="filters">
+
+                <select id="severityFilter">
+                    <option value="">
+                        All Severities
+                    </option>
+                    <option value="HIGH">
+                        High
+                    </option>
+                    <option value="MEDIUM">
+                        Medium
+                    </option>
+                    <option value="LOW">
+                        Low
+                    </option>
+                </select>
+
+
+                <select id="categoryFilter">
+                    <option value="">
+                        All Categories
+                    </option>
+                    <option value="SECURITY">
+                        Security
+                    </option>
+                    <option value="GOVERNANCE">
+                        Governance
+                    </option>
+                    <option value="COST">
+                        Cost
+                    </option>
+                </select>
+
+
+                <select id="departmentFilter">
+                    <option value="">
+                        All Departments
+                    </option>
+                </select>
+                
+                <button id="clearFilters" class="clear-filters-button" type="button">
+                        Clear Filters
+                </button>
+
+            </div>
+
+
+            <!-- ============================= -->
+            <!-- Findings Table -->
+            <!-- ============================= -->
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Control</th>
+                            <th>Severity</th>
+                            <th>Department</th>
+                            <th>Resource</th>
+                            <th>Status</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="findingsTableBody">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ============================= -->
+    <!-- Finding Details Modal -->
+    <!-- ============================= -->
+
+    <div
+        class="modal hidden"
+        id="findingModal"
+    >
+
+        <div class="modal-content">
+
+            <button
+                class="modal-close"
+                id="closeModal"
+                aria-label="Close finding details"
+            >
+                &times;
+            </button>
+
+            <h2 id="modalTitle">
+                Finding Details
+            </h2>
+
+            <div class="detail-row">
+                <span>Control</span>
+                <strong id="modalControl"></strong>
+            </div>
+
+            <div class="detail-row">
+                <span>Severity</span>
+                <strong id="modalSeverity"></strong>
+            </div>
+
+            <div class="detail-row">
+                <span>Department</span>
+                <strong id="modalDepartment"></strong>
+            </div>
+
+            <div class="detail-row">
+                <span>Resource</span>
+                <strong id="modalResource"></strong>
+            </div>
+
+            <div class="detail-section">
+                <h3>Description</h3>
+                <p id="modalDescription"></p>
+            </div>
+
+            <div class="detail-section">
+                <h3>Recommendation</h3>
+                <p id="modalRecommendation"></p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="app.js"></script>
+
+</body>
+</html>
