@@ -21,13 +21,12 @@ resource "aws_security_group" "research_public_ssh" {
   description = "Test security group with intentionally exposed SSH"
 
   ingress {
-    description = "INTENTIONAL LAB VIOLATION - public SSH"
+    description = "Remediated SSH access - internal network only"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["10.0.0.0/8"]
   }
-
   tags = {
     Name        = "${var.project_name}-research-public-ssh-sg"
     Department  = "Research"

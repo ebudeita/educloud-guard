@@ -34,14 +34,16 @@ def store_or_update_finding(finding):
 
     existing_item = response.get("Item")
 
+    resolution_count = 0
+    last_resolved_at = None
+    reopened_at = None
+
     if existing_item:
         previous_status = existing_item.get(
             "status",
             "OPEN",
         )
 
-        # A previously resolved issue that has returned
-        # should be treated as newly actionable.
         is_new = previous_status == "RESOLVED"
 
         scan_count = int(
@@ -52,6 +54,25 @@ def store_or_update_finding(finding):
             "first_detected_at",
             now,
         )
+
+        resolution_count = int(
+            existing_item.get(
+                "resolution_count",
+                0,
+            )
+        )
+
+        last_resolved_at = existing_item.get(
+            "last_resolved_at"
+        )
+
+        if previous_status == "RESOLVED":
+            reopened_at = now
+        else:
+            reopened_at = existing_item.get(
+                "reopened_at"
+            )
+
     else:
         is_new = True
         scan_count = 1
@@ -63,8 +84,17 @@ def store_or_update_finding(finding):
         "first_detected_at": first_detected_at,
         "last_detected_at": now,
         "scan_count": scan_count,
+        "resolution_count": resolution_count,
         "status": "OPEN",
     }
+
+    if last_resolved_at:
+        item["last_resolved_at"] = (
+            last_resolved_at
+        )
+
+    if reopened_at:
+        item["reopened_at"] = reopened_at
 
     table.put_item(Item=item)
 
@@ -95,7 +125,12 @@ def resolve_missing_findings(current_finding_ids):
                 },
                 UpdateExpression=(
                     "SET #status = :resolved, "
-                    "resolved_at = :resolved_at"
+                    "resolved_at = :resolved_at, "
+                    "last_resolved_at = :resolved_at, "
+                    "resolution_count = "
+                    "if_not_exists("
+                    "resolution_count, :zero"
+                    ") + :one"
                 ),
                 ExpressionAttributeNames={
                     "#status": "status"
@@ -103,6 +138,8 @@ def resolve_missing_findings(current_finding_ids):
                 ExpressionAttributeValues={
                     ":resolved": "RESOLVED",
                     ":resolved_at": now,
+                    ":zero": 0,
+                    ":one": 1,
                 },
             )
 
