@@ -268,6 +268,45 @@ function formatDate(value) {
     return new Date(value).toLocaleString();
 }
 
+function calculateFindingAge(finding) {
+
+    if (!finding.first_detected_at) {
+        return "--";
+    }
+
+    const start =
+        new Date(finding.first_detected_at);
+
+    const end =
+        finding.status === "RESOLVED" &&
+        finding.resolved_at
+            ? new Date(finding.resolved_at)
+            : new Date();
+
+    const milliseconds =
+        end - start;
+
+    if (milliseconds < 0) {
+        return "--";
+    }
+
+    const days =
+        Math.floor(
+            milliseconds /
+            (1000 * 60 * 60 * 24)
+        );
+
+    if (days === 0) {
+        return "Less than 1 day";
+    }
+
+    if (days === 1) {
+        return "1 day";
+    }
+
+    return `${days} days`;
+}
+
 function openModal(finding) {
 
     document.getElementById(
@@ -304,6 +343,11 @@ function openModal(finding) {
         "modalLastDetected"
     ).textContent =
         formatDate(finding.last_detected_at);
+    
+    document.getElementById(
+        "modalFindingAge"
+    ).textContent =
+        calculateFindingAge(finding);
 
     document.getElementById(
         "modalScanCount"
