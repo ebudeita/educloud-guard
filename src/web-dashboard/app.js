@@ -12,6 +12,9 @@ const categoryFilter =
 const departmentFilter =
     document.getElementById("departmentFilter");
 
+const statusFilter =
+    document.getElementById("statusFilter");
+
 const clearFiltersButton =
     document.getElementById("clearFilters");
 
@@ -92,6 +95,10 @@ function renderFindings(data) {
 
         const row =
             document.createElement("tr");
+
+        if (finding.status === "RESOLVED") {
+            row.classList.add("resolved-row");
+        }
 
         row.innerHTML = `
             <td>
@@ -211,6 +218,9 @@ function applyFilters() {
     const department =
         departmentFilter.value;
 
+    const status =
+        statusFilter.value;
+
     const filtered =
         findings.filter(finding => {
 
@@ -235,6 +245,13 @@ function applyFilters() {
                 return false;
             }
 
+            if (
+                status &&
+                finding.status !== status
+            ) {
+                return false;
+            }
+
             return true;
         });
 
@@ -242,6 +259,14 @@ function applyFilters() {
     renderFindings(filtered);
 }
 
+function formatDate(value) {
+
+    if (!value) {
+        return "--";
+    }
+
+    return new Date(value).toLocaleString();
+}
 
 function openModal(finding) {
 
@@ -264,6 +289,48 @@ function openModal(finding) {
         "modalResource"
     ).textContent =
         finding.resource_name;
+
+    document.getElementById(
+        "modalStatus"
+    ).textContent =
+        finding.status;
+
+    document.getElementById(
+        "modalFirstDetected"
+    ).textContent =
+        formatDate(finding.first_detected_at);
+
+    document.getElementById(
+        "modalLastDetected"
+    ).textContent =
+        formatDate(finding.last_detected_at);
+
+    const resolvedAtRow =
+        document.getElementById("resolvedAtRow");
+
+    const resolutionCountRow =
+        document.getElementById("resolutionCountRow");
+
+    if (finding.status === "RESOLVED") {
+
+        resolvedAtRow.style.display = "grid";
+        resolutionCountRow.style.display = "grid";
+
+        document.getElementById(
+            "modalResolvedAt"
+        ).textContent =
+            formatDate(finding.resolved_at);
+
+        document.getElementById(
+            "modalResolutionCount"
+        ).textContent =
+            finding.resolution_count ?? 0;
+
+    } else {
+
+        resolvedAtRow.style.display = "none";
+        resolutionCountRow.style.display = "none";
+    }
 
     document.getElementById(
         "modalDescription"
@@ -305,6 +372,11 @@ departmentFilter.addEventListener(
     applyFilters
 );
 
+statusFilter.addEventListener(
+    "change",
+    applyFilters
+);
+
 clearFiltersButton.addEventListener(
     "click",
     () => {
@@ -312,6 +384,7 @@ clearFiltersButton.addEventListener(
         severityFilter.value = "";
         categoryFilter.value = "";
         departmentFilter.value = "";
+        statusFilter.value = "";
 
         applyFilters();
     }
@@ -323,7 +396,7 @@ async function loadFindings() {
 
         const response =
             await fetch(
-                "/api/findings?status=OPEN"
+                "/api/findings"
             );
 
         if (!response.ok) {

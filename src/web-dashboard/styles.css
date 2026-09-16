@@ -239,6 +239,14 @@ td {
     font-size: 14px;
 }
 
+.resolved-row {
+    background: #f8fafc;
+    color: #64748b;
+}
+
+.resolved-row .details-button {
+    background: #475569;
+}
 
 .severity-badge,
 .status-badge {

@@ -179,6 +179,18 @@
                     </option>
                 </select>
                 
+                <select id="statusFilter">
+                    <option value="">
+                        All Statuses
+                    </option>
+                    <option value="OPEN">
+                        Open
+                    </option>
+                    <option value="RESOLVED">
+                        Resolved
+                    </option>
+                </select>
+                
                 <button id="clearFilters" class="clear-filters-button" type="button">
                         Clear Filters
                 </button>
@@ -258,6 +270,37 @@
             <div class="detail-row">
                 <span>Resource</span>
                 <strong id="modalResource"></strong>
+            </div>
+
+            <div class="detail-row">
+                <span>Status</span>
+                <strong id="modalStatus"></strong>
+            </div>
+
+            <div class="detail-row">
+                <span>First Detected</span>
+                <strong id="modalFirstDetected"></strong>
+            </div>
+
+            <div class="detail-row">
+                <span>Last Detected</span>
+                <strong id="modalLastDetected"></strong>
+            </div>
+
+            <div
+                class="detail-row"
+                id="resolvedAtRow"
+            >
+                <span>Resolved At</span>
+                <strong id="modalResolvedAt"></strong>
+            </div>
+
+            <div
+                class="detail-row"
+                id="resolutionCountRow"
+            >
+                <span>Resolution Count</span>
+                <strong id="modalResolutionCount"></strong>
             </div>
 
             <div class="detail-section">
