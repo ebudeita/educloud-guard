@@ -305,6 +305,11 @@ function openModal(finding) {
     ).textContent =
         formatDate(finding.last_detected_at);
 
+    document.getElementById(
+        "modalScanCount"
+    ).textContent =
+        finding.scan_count ?? 0;
+
     const resolvedAtRow =
         document.getElementById("resolvedAtRow");
 
