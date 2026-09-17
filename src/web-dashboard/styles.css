@@ -191,7 +191,8 @@ body {
 }
 
 
-.filters select {
+.filters select,
+.filters .search-filter {
     min-width: 180px;
     padding: 10px 12px;
 
@@ -200,6 +201,10 @@ body {
 
     background: white;
     color: #334155;
+}
+
+.filters .search-filter::placeholder {
+    color: #64748b;
 }
 
 

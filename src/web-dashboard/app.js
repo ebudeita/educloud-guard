@@ -15,6 +15,9 @@ const departmentFilter =
 const statusFilter =
     document.getElementById("statusFilter");
 
+const searchFilter =
+    document.getElementById("searchFilter");
+
 const clearFiltersButton =
     document.getElementById("clearFilters");
 
@@ -233,6 +236,11 @@ function applyFilters() {
     const status =
         statusFilter.value;
 
+    const searchTerm =
+        searchFilter.value
+        .trim()
+        .toLowerCase();
+
     const filtered =
         findings.filter(finding => {
 
@@ -262,6 +270,27 @@ function applyFilters() {
                 finding.status !== status
             ) {
                 return false;
+            }
+
+            if (searchTerm) {
+
+                const searchableText = [
+                    finding.control_id,
+                    finding.severity,
+                    finding.category,
+                    finding.department,
+                    finding.resource_name,
+                    finding.status,
+                    finding.description,
+                    finding.recommendation
+                ]
+                    .filter(Boolean)
+                    .join(" ")
+                    .toLowerCase();
+
+                if (!searchableText.includes(searchTerm)) {
+                    return false;
+                }
             }
 
             return true;
@@ -438,6 +467,11 @@ statusFilter.addEventListener(
     applyFilters
 );
 
+searchFilter.addEventListener(
+    "input",
+    applyFilters
+);
+
 clearFiltersButton.addEventListener(
     "click",
     () => {
@@ -446,6 +480,7 @@ clearFiltersButton.addEventListener(
         categoryFilter.value = "";
         departmentFilter.value = "";
         statusFilter.value = "";
+        searchFilter.value = "";
 
         applyFilters();
     }
