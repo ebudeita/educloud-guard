@@ -20,43 +20,55 @@ const clearFiltersButton =
 
 function updateSummary(data) {
 
-    document.getElementById("openCount").textContent =
+    const openFindings =
         data.filter(
             finding => finding.status === "OPEN"
-        ).length;
+        );
+
+    const resolvedFindings =
+        data.filter(
+            finding => finding.status === "RESOLVED"
+        );
+
+
+    document.getElementById("openCount").textContent =
+        openFindings.length;
+
+    document.getElementById("resolvedCount").textContent =
+        resolvedFindings.length;
+
 
     document.getElementById("highCount").textContent =
-        data.filter(
+        openFindings.filter(
             finding => finding.severity === "HIGH"
         ).length;
 
     document.getElementById("mediumCount").textContent =
-        data.filter(
+        openFindings.filter(
             finding => finding.severity === "MEDIUM"
         ).length;
 
     document.getElementById("lowCount").textContent =
-        data.filter(
+        openFindings.filter(
             finding => finding.severity === "LOW"
         ).length;
 
 
     document.getElementById("securityCount").textContent =
-        data.filter(
+        openFindings.filter(
             finding => finding.category === "SECURITY"
         ).length;
 
     document.getElementById("governanceCount").textContent =
-        data.filter(
+        openFindings.filter(
             finding => finding.category === "GOVERNANCE"
         ).length;
 
     document.getElementById("costCount").textContent =
-        data.filter(
+        openFindings.filter(
             finding => finding.category === "COST"
         ).length;
 }
-
 
 function severityClass(severity) {
 
