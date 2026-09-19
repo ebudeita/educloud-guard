@@ -44,6 +44,8 @@ The system:
 
 ## Architecture
 
+![EduCloud Guard Architecture](docs/images/educloud-guard-architecture.png)
+
 ```text
                     Amazon EventBridge
                            |
