@@ -18,8 +18,17 @@ const statusFilter =
 const searchFilter =
     document.getElementById("searchFilter");
 
+const sortFilter = document.getElementById("sortFilter");
+
 const clearFiltersButton =
     document.getElementById("clearFilters");
+
+const previousPageButton = document.getElementById("previousPage");
+const nextPageButton = document.getElementById("nextPage");
+const pageInfo = document.getElementById("pageInfo");
+
+let currentPage = 1;
+const findingsPerPage = 5;
 
 function updateSummary(data) {
 
@@ -189,6 +198,36 @@ function renderFindings(data) {
         });
 }
 
+function paginateFindings(data) {
+    const totalPages = Math.max(
+        1,
+        Math.ceil(data.length / findingsPerPage)
+    );
+
+    if (currentPage > totalPages) {
+        currentPage = totalPages;
+    }
+
+    const startIndex =
+        (currentPage - 1) * findingsPerPage;
+
+    const endIndex =
+        startIndex + findingsPerPage;
+
+    const pageData =
+        data.slice(startIndex, endIndex);
+
+    pageInfo.textContent =
+        `Page ${currentPage} of ${totalPages}`;
+
+    previousPageButton.disabled =
+        currentPage === 1;
+
+    nextPageButton.disabled =
+        currentPage === totalPages;
+
+    return pageData;
+}
 
 function populateDepartments() {
 
@@ -241,7 +280,7 @@ function applyFilters() {
         .trim()
         .toLowerCase();
 
-    const filtered =
+    let filtered =
         findings.filter(finding => {
 
             if (
@@ -296,8 +335,48 @@ function applyFilters() {
             return true;
         });
 
+                const sortBy = sortFilter.value;
 
-    renderFindings(filtered);
+                const severityRank = {
+                    HIGH: 3,
+                    MEDIUM: 2,
+                    LOW: 1
+                };
+
+                if (sortBy === "severity") {
+                    filtered.sort(
+                        (a, b) =>
+                            (severityRank[b.severity] || 0) -
+                            (severityRank[a.severity] || 0)
+                    );
+                }
+
+                if (sortBy === "department") {
+                    filtered.sort((a, b) =>
+                        (a.department || "").localeCompare(
+                            b.department || ""
+                        )
+                    );
+                }
+
+                if (sortBy === "status") {
+                    filtered.sort((a, b) =>
+                        (a.status || "").localeCompare(
+                            b.status || ""
+                        )
+                    );
+                }
+
+                if (sortBy === "age") {
+                    filtered.sort((a, b) =>
+                        new Date(a.first_detected_at || 0) -
+                        new Date(b.first_detected_at || 0)
+                    );
+                }
+    const paginatedFindings =
+        paginateFindings(filtered);
+
+    renderFindings(paginatedFindings);
 }
 
 function formatDate(value) {
@@ -438,7 +517,6 @@ function openModal(finding) {
         .classList.remove("hidden");
 }
 
-
 function closeModal() {
 
     document
@@ -446,30 +524,39 @@ function closeModal() {
         .classList.add("hidden");
 }
 
+function resetPageAndApplyFilters() {
+    currentPage = 1;
+    applyFilters();
+}
 
 severityFilter.addEventListener(
     "change",
-    applyFilters
+    resetPageAndApplyFilters
 );
 
 categoryFilter.addEventListener(
     "change",
-    applyFilters
+    resetPageAndApplyFilters
 );
 
 departmentFilter.addEventListener(
     "change",
-    applyFilters
+    resetPageAndApplyFilters
 );
 
 statusFilter.addEventListener(
     "change",
-    applyFilters
+    resetPageAndApplyFilters
 );
 
 searchFilter.addEventListener(
     "input",
-    applyFilters
+    resetPageAndApplyFilters
+);
+
+sortFilter.addEventListener(
+    "change",
+    resetPageAndApplyFilters
 );
 
 clearFiltersButton.addEventListener(
@@ -481,10 +568,24 @@ clearFiltersButton.addEventListener(
         departmentFilter.value = "";
         statusFilter.value = "";
         searchFilter.value = "";
+        sortFilter.value = "";
+        currentPage = 1;
 
         applyFilters();
     }
 );
+
+previousPageButton.addEventListener("click", () => {
+    if (currentPage > 1) {
+        currentPage--;
+        applyFilters();
+    }
+});
+
+nextPageButton.addEventListener("click", () => {
+    currentPage++;
+    applyFilters();
+});
 
 async function loadFindings() {
 

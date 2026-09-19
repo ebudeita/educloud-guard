@@ -207,6 +207,14 @@
                     placeholder="Search findings..."
                     aria-label="Search findings"
                 >
+
+                <select id="sortFilter" aria-label="Sort findings">
+                    <option value="">Sort By</option>
+                    <option value="severity">Severity</option>
+                    <option value="department">Department</option>
+                    <option value="status">Status</option>
+                    <option value="age">Finding Age</option>
+                </select>
                 
                 <button id="clearFilters" class="clear-filters-button" type="button">
                         Clear Filters
@@ -239,6 +247,16 @@
 
                 </table>
 
+            </div>
+
+            <div class="pagination">
+                <button id="previousPage" type="button">Previous</button>
+
+                <span id="pageInfo">
+                    Page 1 of 1
+                </span>
+
+                <button id="nextPage" type="button">Next</button>
             </div>
 
         </section>
