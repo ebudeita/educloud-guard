@@ -333,4 +333,4 @@ Some resources are intentionally configured with governance or security violatio
 **Ita Ebude**
 
 AWS Certified Solutions Architect – Associate  
-Cloud / Cloud Support / Cloud Security
+Cloud Support / Cloud Security
