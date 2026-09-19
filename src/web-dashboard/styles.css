@@ -463,3 +463,40 @@ td {
 .clear-filters-button:hover {
     background: #e2e8f0;
 }
+/* Pagination */
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 24px;
+    padding-top: 4px;
+}
+
+.pagination button {
+    padding: 10px 18px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #334155;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+    background: #f1f5f9;
+}
+
+.pagination button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+#pageInfo {
+    color: #475569;
+    font-size: 14px;
+    font-weight: 600;
+}

@@ -612,7 +612,8 @@ async function loadFindings() {
 
         updateSummary(findings);
 
-        renderFindings(findings);
+        currentPage = 1;
+            applyFilters();
 
         document.getElementById(
             "lastUpdated"
