@@ -81,6 +81,35 @@ Infrastructure is provisioned and managed using **Terraform**.
 
 ---
 
+## Dashboard
+
+EduCloud Guard provides a web dashboard for reviewing cloud governance,
+security, and cost findings across the simulated NorthStar University
+AWS environment.
+
+### Cloud Posture Dashboard
+
+![EduCloud Guard Dashboard](docs/images/educloud-guard-dashboard.png)
+
+The dashboard provides:
+
+- Open and resolved finding counts
+- Severity-based metrics
+- Security, governance, and cost posture summaries
+- Filtering by severity, category, department, and status
+- Finding search and sorting
+- Pagination for larger finding sets
+
+### Finding Details
+
+![EduCloud Guard Finding Details](docs/images/educloud-guard-finding-details.png)
+
+Each finding includes its severity, affected resource, department,
+lifecycle status, detection history, description, and recommended
+remediation.
+
+---
+
 ## AWS Services Used
 
 | Service | Purpose |
